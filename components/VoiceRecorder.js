@@ -118,19 +118,19 @@ const downloadTranscription = () => {
     }
   };
 
-  const createJiraTicket = async () => {
+  /*const createJiraTicket = async () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     return 'https://wsc-sports.atlassian.net/browse/WSC-123';
-  };
+  };*/
 
-  /*const createJiraTicket = async () => {
+  const createJiraTicket = async () => {
     if (!transcription) return;
     
     try {
       // We'll update these values later with environment variables
-      const JIRA_EMAIL = 'your-email@wsc-sports.com';
-      const JIRA_API_TOKEN = 'your-api-token';
-      const PROJECT_KEY = 'WSC'; // Placeholder
+      const JIRA_EMAIL = process.env.NEXT_PUBLIC_JIRA_EMAIL;
+      const JIRA_API_TOKEN = process.env.NEXT_PUBLIC_JIRA_API_TOKEN;
+      const PROJECT_KEY = process.env.NEXT_PUBLIC_JIRA_PROJECT_KEY;
   
       const response = await fetch('https://wsc-sports.atlassian.net/rest/api/2/issue', {
         method: 'POST',
@@ -165,8 +165,8 @@ const downloadTranscription = () => {
     } catch (error) {
       console.error('Error creating Jira ticket:', error);
       throw error;
-    }*/
-  
+    }
+  };
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-center">Voice Recorder</h2>

@@ -7,7 +7,6 @@ const VoiceRecorder = () => {
   const [audioBlob, setAudioBlob] = useState(null);
   const [transcription, setTranscription] = useState('');
   const [isTranscribing, setIsTranscribing] = useState(false);
-  const [apiKey, setApiKey] = useState('');  // This line must be present
   const [copySuccess, setCopySuccess] = useState('');
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
@@ -69,11 +68,6 @@ const VoiceRecorder = () => {
   };
 
   const transcribeAudio = async (audioBlob) => {
-    if (!apiKey) {
-      alert('Please enter your OpenAI API key first');
-      return;
-    }
-
     try {
       setIsTranscribing(true);
       
@@ -84,7 +78,7 @@ const VoiceRecorder = () => {
       const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
         },
         body: formData,
       });
@@ -176,19 +170,7 @@ const downloadTranscription = () => {
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-center">Voice Recorder</h2>
-      
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          OpenAI API Key
-        </label>
-        <input
-          type="password"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          placeholder="sk-..."
-          className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
-        />
-      </div>
+
 
       <div className="flex justify-center mb-6">
         <button

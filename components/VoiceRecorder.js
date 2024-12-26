@@ -227,7 +227,8 @@ const downloadTranscription = () => {
                   const url = await createJiraTicket();
                   setJiraTicketUrl(url);
                   setJiraError('');
-                } catch (err) {
+                } catch (error) {
+                  console.error(error);
                   setJiraError('Failed to create Jira ticket');
                 }
               }}

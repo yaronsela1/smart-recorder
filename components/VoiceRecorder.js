@@ -167,7 +167,7 @@ const downloadTranscription = () => {
       {transcription && (
         <div className="mt-4 p-4 bg-gray-50 rounded-lg">
           <h3 className="font-bold mb-2">Transcription:</h3>
-          <p className="mb-4">{transcription}</p>
+          <p className="mb-4 text-gray-900">{transcription}</p>
           
           {/* Add these new buttons */}
           <div className="flex space-x-4">

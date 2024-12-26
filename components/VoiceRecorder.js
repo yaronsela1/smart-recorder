@@ -127,41 +127,17 @@ const downloadTranscription = () => {
     if (!transcription) return;
     
     try {
-      // We'll update these values later with environment variables
-      const JIRA_EMAIL = process.env.NEXT_PUBLIC_JIRA_EMAIL;
-      const JIRA_API_TOKEN = process.env.NEXT_PUBLIC_JIRA_API_TOKEN;
-      const PROJECT_KEY = process.env.NEXT_PUBLIC_JIRA_PROJECT_KEY;
-  
-      const response = await fetch('https://wsc-sports.atlassian.net/rest/api/2/issue', {
+      const response = await fetch('/api/jira', {
         method: 'POST',
+        body: JSON.stringify({ transcription }),
         headers: {
-          'Authorization': `Basic ${Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString('base64')}`,
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fields: {
-            project: {
-              key: PROJECT_KEY
-            },
-            summary: transcription,
-            description: transcription,
-            issuetype: {
-              name: 'Story'
-            },
-            assignee: {
-              name: 'Yaron Sela'
-            },
-            labels: ['smart-recorder']
-          }
-        })
+        }
       });
   
-      if (!response.ok) {
-        throw new Error('Failed to create Jira ticket');
-      }
-  
       const data = await response.json();
-      return `https://wsc-sports.atlassian.net/browse/${data.key}`;
+      if (data.error) throw new Error(data.error);
+      return data.url;
     } catch (error) {
       console.error('Error creating Jira ticket:', error);
       throw error;

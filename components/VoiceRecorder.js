@@ -7,7 +7,6 @@ const VoiceRecorder = () => {
   const [audioBlob, setAudioBlob] = useState(null);
   const [transcription, setTranscription] = useState('');
   const [isTranscribing, setIsTranscribing] = useState(false);
-  const [copySuccess, setCopySuccess] = useState('');
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
   const streamRef = useRef(null);
@@ -96,32 +95,6 @@ const VoiceRecorder = () => {
       setIsTranscribing(false);
     }
   };
-    
-const downloadTranscription = () => {
-    const element = document.createElement('a');
-    const file = new Blob([transcription], {type: 'text/plain'});
-    element.href = URL.createObjectURL(file);
-    element.download = `transcription-${new Date().toISOString()}.txt`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-  };
-
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(transcription);
-      setCopySuccess('Copied!');
-      setTimeout(() => setCopySuccess(''), 2000);
-    } catch (err) {
-      setCopySuccess('Failed to copy');
-      console.error('Failed to copy text: ', err);
-    }
-  };
-
-  /*const createJiraTicket = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return 'https://wsc-sports.atlassian.net/browse/WSC-123';
-  };*/
 
   const createJiraTicket = async () => {
     if (!transcription) return;
@@ -180,23 +153,10 @@ const downloadTranscription = () => {
         <div className="mt-4 p-4 bg-gray-50 rounded-lg">
           <h3 className="font-bold mb-2">Transcription:</h3>
           <p className="mb-4 text-gray-900">{transcription}</p>
+      
           
           {/* Add these new buttons */}
           <div className="flex space-x-4">
-            <button
-              onClick={downloadTranscription}
-              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
-            >
-              Download as Text
-            </button>
-            
-            <button
-              onClick={copyToClipboard}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-            >
-              {copySuccess || 'Copy to Clipboard'}
-            </button>
-
             <button
               onClick={async () => {
                 try {

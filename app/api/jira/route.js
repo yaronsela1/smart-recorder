@@ -1,5 +1,5 @@
 export async function POST(request) {
-    const { transcription } = await request.json();
+    const { transcription, summary } = await request.json();
     console.log('Received transcription:', transcription);
     
     try {
@@ -12,7 +12,7 @@ export async function POST(request) {
         body: JSON.stringify({
           fields: {
             project: { key: process.env.NEXT_PUBLIC_JIRA_PROJECT_KEY },
-            summary: transcription,
+            summary: summary,
             description: transcription,
             issuetype: { name: 'Story' },
             assignee: { name: 'Yaron Sela' },

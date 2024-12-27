@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 
 const VoiceRecorder = () => {
   // Make sure these state declarations are at the top of your component
+  const [summary, setSummary] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [transcription, setTranscription] = useState('');
@@ -102,7 +103,7 @@ const VoiceRecorder = () => {
     try {
       const response = await fetch('/api/jira', {
         method: 'POST',
-        body: JSON.stringify({ transcription }),
+        body: JSON.stringify({ transcription, summary }),
         headers: {
           'Content-Type': 'application/json',
         }
@@ -120,6 +121,19 @@ const VoiceRecorder = () => {
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-center">Voice Recorder</h2>
 
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Ticket Summary
+        </label>
+        <input
+          type="text"
+          value={summary}
+          onChange={(e) => setSummary(e.target.value)}
+          placeholder="Add User Story title"
+          className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+          required
+        />
+      </div>
 
       <div className="flex justify-center mb-6">
         <button
@@ -130,7 +144,7 @@ const VoiceRecorder = () => {
               : 'bg-blue-500 hover:bg-blue-600'
           } text-white`}
         >
-          {isRecording ? 'Stop Recording' : 'Start Recording'}
+          {isRecording ? 'Stop Recording' : 'Record Spec'}
         </button>
       </div>
       

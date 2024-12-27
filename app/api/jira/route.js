@@ -17,8 +17,8 @@ export async function POST(request) {
             issuetype: { name: 'Story' },
             assignee: { name: 'Yaron Sela' },
             labels: ['smart-recorder'],
-            customfield_10105: {name: 'Avgen'},
-            customfield_10107: {name: 'R&D'}
+            customfield_10105: {"value": "Avgen"},
+            customfield_10107: {"value": "R&D"}
           }
         })
       });

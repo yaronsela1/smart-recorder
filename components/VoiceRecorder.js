@@ -13,6 +13,7 @@ const VoiceRecorder = () => {
   const streamRef = useRef(null);
   const [jiraTicketUrl, setJiraTicketUrl] = useState('');
   const [jiraError, setJiraError] = useState('');
+  const [copyUrlSuccess, setCopyUrlSuccess] = useState(false);
   
   
 
@@ -191,17 +192,32 @@ const VoiceRecorder = () => {
           {jiraTicketUrl && (
             <div className="mt-4 p-4 bg-green-50 text-green-700 rounded-lg">
               <p>Successfully created Jira ticket!</p>
-              <a 
-                href={jiraTicketUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                View ticket
-              </a>
+              <div className="flex items-center space-x-2">
+                <a 
+                  href={jiraTicketUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline"
+                >
+                  View ticket
+                </a>
+                <button
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(jiraTicketUrl);
+                      setCopyUrlSuccess(true);
+                      setTimeout(() => setCopyUrlSuccess(false), 2000); // Reset after 2 seconds
+                    } catch (err) {
+                      console.error('Failed to copy:', err);
+                    }
+                  }}
+                  className="ml-2 p-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded"
+                >
+                  {copyUrlSuccess ? 'Copied!' : 'Copy URL'}
+                </button>
+              </div>
             </div>
           )}
-
           {jiraError && (
             <div className="mt-4 p-4 bg-red-50 text-red-700 rounded-lg">
               {jiraError}

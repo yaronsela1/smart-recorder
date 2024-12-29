@@ -120,11 +120,11 @@ const VoiceRecorder = () => {
   };
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center">Voice Recorder</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">Speech to User Story</h2>
 
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Ticket Summary
+          User Story Title
         </label>
         <input
           type="text"

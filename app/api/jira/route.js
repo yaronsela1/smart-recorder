@@ -1,6 +1,16 @@
 export async function POST(request) {
-    const { transcription, summary } = await request.json();
-    console.log('Received transcription:', transcription);
+  try {
+      const body = await request.json();
+      console.log('1. Request body received:', body);
+      
+      const { transcription, summary, assignee, squad } = body;
+      console.log('2. Parsed values:', { transcription, summary, assignee, squad });
+      
+      console.log('3. Environment variables present:', {
+          hasEmail: !!process.env.NEXT_PUBLIC_JIRA_EMAIL,
+          hasToken: !!process.env.NEXT_PUBLIC_JIRA_API_TOKEN,
+          hasProjectKey: !!process.env.NEXT_PUBLIC_JIRA_PROJECT_KEY
+      });
     
     try {
       const response = await fetch('https://wsc-sports.atlassian.net/rest/api/2/issue', {

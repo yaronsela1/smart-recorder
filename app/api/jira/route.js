@@ -3,7 +3,7 @@ export async function POST(request) {
     const body = await request.json();
     console.log('1. Request body received:', body);
     
-    const { transcription, summary, assignee, squad = 'Avgen' } = body;  // Added default value for squad
+    const { transcription, summary, assignee, squad = 'Avgen' } = body;
     console.log('2. Parsed values:', { transcription, summary, assignee, squad });
     
     console.log('3. Environment variables present:', {
@@ -12,6 +12,7 @@ export async function POST(request) {
       hasProjectKey: !!process.env.NEXT_PUBLIC_JIRA_PROJECT_KEY
     });
   
+    // First create the ticket
     const response = await fetch('https://wsc-sports.atlassian.net/rest/api/2/issue', {
       method: 'POST',
       headers: {
@@ -24,20 +25,38 @@ export async function POST(request) {
           summary: summary,
           description: transcription,
           issuetype: { name: 'Story' },
-          assignee: { name: 'Yaron Sela' },
           labels: ['smart-recorder'],
-          customfield_10105: {"value": squad},  // Now using the squad value from the request
+          customfield_10105: {"value": squad},
           customfield_10107: {"value": "R&D"}
         }
       })
     });
 
     const data = await response.json();
-    console.log('Jira response:', data);
+    console.log('Jira ticket creation response:', data);
     
     if (!response.ok) {
       console.error('Jira error:', data);
       throw new Error(data.message || 'Failed to create ticket');
+    }
+
+    // Now update the assignee in a separate call
+    console.log('Attempting to set assignee for ticket:', data.key);
+    const assigneeResponse = await fetch(`https://wsc-sports.atlassian.net/rest/api/2/issue/${data.key}/assignee`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Basic ${Buffer.from(`${process.env.NEXT_PUBLIC_JIRA_EMAIL}:${process.env.NEXT_PUBLIC_JIRA_API_TOKEN}`).toString('base64')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        accountId: "632b2292f568615bdc7ba179"
+      })
+    });
+
+    if (!assigneeResponse.ok) {
+      console.error('Failed to set assignee:', await assigneeResponse.text());
+    } else {
+      console.log('Successfully set assignee');
     }
 
     return Response.json({ url: `https://wsc-sports.atlassian.net/browse/${data.key}` });

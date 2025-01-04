@@ -49,7 +49,7 @@ export async function POST(request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        accountId: "632b2292f568615bdc7ba179"
+        accountId: assignee
       })
     });
 

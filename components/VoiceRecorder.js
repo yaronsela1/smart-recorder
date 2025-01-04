@@ -5,6 +5,7 @@ const VoiceRecorder = () => {
   // Make sure these state declarations are at the top of your component
   const [summary, setSummary] = useState('');
   const [squad, setSquad] = useState('Avgen'); // Default to Avgen
+  const [assignee, setAssignee] = useState('632b2292f568615bdc7ba179');
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [transcription, setTranscription] = useState('');
@@ -105,7 +106,7 @@ const VoiceRecorder = () => {
     try {
       const response = await fetch('/api/jira', {
         method: 'POST',
-        body: JSON.stringify({ transcription, summary, squad }),
+        body: JSON.stringify({ transcription, summary, squad, assignee }),
         headers: {
           'Content-Type': 'application/json',
         }
@@ -137,6 +138,19 @@ const VoiceRecorder = () => {
         />
       </div>
 
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Assignee
+        </label>
+        <select
+          value={assignee}
+          onChange={(e) => setAssignee(e.target.value)}
+          className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="632b2292f568615bdc7ba179">Yaron Sela</option>
+          <option value="62d524903ace3a8e738846a5">Omer Peer</option>
+        </select>
+      </div>
       
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-2">

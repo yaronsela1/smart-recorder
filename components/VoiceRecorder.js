@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 const VoiceRecorder = () => {
   // Make sure these state declarations are at the top of your component
   const [summary, setSummary] = useState('');
+  const [squad, setSquad] = useState('Avgen'); // Default to Avgen
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [transcription, setTranscription] = useState('');
@@ -104,7 +105,7 @@ const VoiceRecorder = () => {
     try {
       const response = await fetch('/api/jira', {
         method: 'POST',
-        body: JSON.stringify({ transcription, summary }),
+        body: JSON.stringify({ transcription, summary, squad }),
         headers: {
           'Content-Type': 'application/json',
         }
@@ -134,6 +135,21 @@ const VoiceRecorder = () => {
           className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
           required
         />
+      </div>
+
+      
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Squad
+        </label>
+        <select
+          value={squad}
+          onChange={(e) => setSquad(e.target.value)}
+          className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="Avgen">Avgen</option>
+          <option value="Sports">Sports</option>
+        </select>
       </div>
 
       <div className="flex justify-center mb-6">

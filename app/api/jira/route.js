@@ -3,7 +3,7 @@ export async function POST(request) {
     const body = await request.json();
     console.log('1. Request body received:', body);
     
-    const { transcription, summary, assignee, squad } = body;
+    const { transcription, summary, assignee, squad = 'Avgen' } = body;  // Added default value for squad
     console.log('2. Parsed values:', { transcription, summary, assignee, squad });
     
     console.log('3. Environment variables present:', {
@@ -26,7 +26,7 @@ export async function POST(request) {
           issuetype: { name: 'Story' },
           assignee: { name: 'Yaron Sela' },
           labels: ['smart-recorder'],
-          customfield_10105: {"value": "Avgen"},
+          customfield_10105: {"value": squad},  // Now using the squad value from the request
           customfield_10107: {"value": "R&D"}
         }
       })

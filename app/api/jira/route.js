@@ -1,5 +1,12 @@
+import { db, testFirebase } from '@/utils/firebase';
+import { collection, addDoc } from 'firebase/firestore';
+
 export async function POST(request) {
   try {
+    // Test Firebase connection
+    const firebaseTest = await testFirebase();
+    console.log("Firebase connection test:", firebaseTest ? "SUCCESS" : "FAILED");
+
     const body = await request.json();
     console.log('1. Request body received:', body);
     
@@ -57,6 +64,22 @@ export async function POST(request) {
       console.error('Failed to set assignee:', await assigneeResponse.text());
     } else {
       console.log('Successfully set assignee');
+    }
+
+    if (!summary.toLowerCase().includes('test')) {
+      try {
+        const docRef = await addDoc(collection(db, "tickets"), {
+          timestamp: new Date(),
+          ticketId: data.key,
+          summary: summary,
+          assignee: assignee,
+          squad: squad
+        });
+        console.log("Ticket logged to Firebase with ID: ", docRef.id);
+      } catch (error) {
+        console.error("Error logging to Firebase: ", error);
+        // Don't throw the error since the Jira ticket was still created successfully
+      }
     }
 
     return Response.json({ url: `https://wsc-sports.atlassian.net/browse/${data.key}` });

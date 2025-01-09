@@ -10,6 +10,7 @@ const VoiceRecorder = () => {
   const [audioBlob, setAudioBlob] = useState(null);
   const [transcription, setTranscription] = useState('');
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const [isTextInputVisible, setIsTextInputVisible] = useState(false);
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
   const streamRef = useRef(null);
@@ -120,6 +121,11 @@ const VoiceRecorder = () => {
       throw error;
     }
   };
+
+  const toggleTextInput = () => {
+    setIsTextInputVisible((prev) => !prev);
+    if (!isTextInputVisible) setTranscription(''); // Clear the transcription when switching to text input
+  };
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-center">Speech to User Story</h2>
@@ -179,6 +185,25 @@ const VoiceRecorder = () => {
         </button>
       </div>
       
+      <div className="flex justify-center mb-6">
+        <button
+          onClick={toggleTextInput}
+          className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+        >
+          {isTextInputVisible ? 'Cancel Typing' : 'Type Instead of Record'}
+        </button>
+      </div>
+
+      {isTextInputVisible && (
+        <div className="mb-6">
+          <textarea
+            value={transcription}
+            onChange={(e) => setTranscription(e.target.value)}
+            placeholder="Type your user story or specification here"
+            className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+          />
+        </div>
+      )}
       {audioBlob && (
         <div className="mt-6">
           <audio controls className="w-full mb-4">

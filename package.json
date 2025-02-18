@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@pinecone-database/pinecone": "^5.0.0",
     "firebase": "^11.1.0",
+    "langchain": "^0.3.18",
     "next": "15.1.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

@@ -37,7 +37,11 @@ export const companyContext = {
       System: A system in WSC holds all the games and event for a specific sports league or tournament. For example, La Liga is a system. Multiple customers can share a system if neccessary. A system has streams under it for each broadcast of the game.
 
       User group: A user group hosts one or multiple systems and gives users access to them. 
-      
+
       User Alias: This is a single user. A user has access to one or more user groups, each user groups providing access to one or more systems.
+
+      Rule: Each rule is made up of a trigger, subject, condition (optional), and output. The trigger tells the rule when to start working (for example "post game" is a trigger that tell the rule to start working after the game ends).
+      The subject lets the user know what the rule is about (player, team, action, or game). The condition is optional and helps specify the rule to work only when something is met, for example "only send a video if the player had 30+ points).
+      The action is the type of content that will be created. For example: game highlight, player highlight, top plays. Example for a rule: game - post game - game highlights. This rule has no condition
     `
   };

@@ -1,5 +1,6 @@
 import { db, testFirebase } from '@/utils/firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import { formatUserStory } from '@/utils/gpt';
 
 export async function POST(request) {
   try {
@@ -13,13 +14,18 @@ export async function POST(request) {
     const { transcription, summary, assignee, squad = 'Avgen' } = body;
     console.log('2. Parsed values:', { transcription, summary, assignee, squad });
     
-    console.log('3. Environment variables present:', {
+    // New step: Format the transcription into a user story
+    console.log('3. Formatting transcription with company context...');
+    const formattedStory = await formatUserStory(transcription);
+    console.log('4. Formatting complete');
+    
+    console.log('5. Environment variables present:', {
       hasEmail: !!process.env.NEXT_PUBLIC_JIRA_EMAIL,
       hasToken: !!process.env.NEXT_PUBLIC_JIRA_API_TOKEN,
       hasProjectKey: !!process.env.NEXT_PUBLIC_JIRA_PROJECT_KEY
     });
   
-    // First create the ticket
+    // Create the ticket with formatted story
     const response = await fetch('https://wsc-sports.atlassian.net/rest/api/2/issue', {
       method: 'POST',
       headers: {
@@ -30,7 +36,7 @@ export async function POST(request) {
         fields: {
           project: { key: process.env.NEXT_PUBLIC_JIRA_PROJECT_KEY },
           summary: summary,
-          description: transcription,
+          description: formattedStory, // Use the formatted story instead of raw transcription
           issuetype: { name: 'Story' },
           labels: ['smart-recorder'],
           customfield_10105: {"value": squad},
@@ -73,7 +79,9 @@ export async function POST(request) {
           ticketId: data.key,
           summary: summary,
           assignee: assignee,
-          squad: squad
+          squad: squad,
+          originalTranscription: transcription, // Store the original transcription for reference
+          formattedStory: formattedStory // Store the formatted story for reference
         });
         console.log("Ticket logged to Firebase with ID: ", docRef.id);
       } catch (error) {
@@ -82,7 +90,10 @@ export async function POST(request) {
       }
     }
 
-    return Response.json({ url: `https://wsc-sports.atlassian.net/browse/${data.key}` });
+    return Response.json({ 
+      url: `https://wsc-sports.atlassian.net/browse/${data.key}`,
+      formattedStory: formattedStory // Return the formatted story in the response
+    });
   } catch (error) {
     console.error('Server error:', error);
     return Response.json({ error: error.message }, { status: 500 });

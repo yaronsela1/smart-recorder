@@ -26,6 +26,11 @@ export const companyContext = {
     Works alongside AVGen and Clipro to streamline media operations.
     The library also has features within AVGen and Clipro where users can choose which library folder they want content to be sent to.
     `,
+    Users: `
+    There are 2 main types of users. Content/Video editors and Content/team leads. 
+    The editors usually work in shifts and are working on Clipro watching the live games. They mainly create videos in the Clipro editor or AVGen Create
+    The content/team leads are in charge of the content plans and while they work in Clipro, they are also the ones in charge of setting rules in AVGen rules.
+    `,
     domains: `
       Growth: This domain is mainly WSC's aims to become more of a B2B2C company. They have an SDK that enables rights holders to create sports content apps very easily where WSC helps them manage content and share with their fans.
       They have enhanced live which is an offering for smart TVs that provides live summaries of games on TV

@@ -32,6 +32,7 @@ export async function POST(request) {
         'Authorization': `Basic ${Buffer.from(`${process.env.NEXT_PUBLIC_JIRA_EMAIL}:${process.env.NEXT_PUBLIC_JIRA_API_TOKEN}`).toString('base64')}`,
         'Content-Type': 'application/json',
       },
+      signal: AbortSignal.timeout(30000),
       body: JSON.stringify({
         fields: {
           project: { key: process.env.NEXT_PUBLIC_JIRA_PROJECT_KEY },

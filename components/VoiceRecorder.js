@@ -75,27 +75,54 @@ const VoiceRecorder = () => {
     try {
       setIsTranscribing(true);
       
+      // Check if file is too large (OpenAI limit is 25MB)
+      const fileSizeMB = audioBlob.size / (1024 * 1024);
+      console.log(`Audio file size: ${fileSizeMB.toFixed(2)} MB`);
+      
+      if (fileSizeMB > 24) {
+        throw new Error(`File size (${fileSizeMB.toFixed(2)} MB) exceeds the 25MB limit.`);
+      }
+      
+      // Set a longer timeout for larger files
+      const timeoutMs = Math.min(120000, fileSizeMB * 10000); // 10 seconds per MB, max 2 minutes
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      
       const formData = new FormData();
       formData.append('file', audioBlob, 'audio.webm');
       formData.append('model', 'whisper-1');
-
+  
       const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
         },
         body: formData,
+        signal: controller.signal
       });
-
+      
+      clearTimeout(timeoutId);
+  
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.text();
+        console.error('API error response:', errorData);
+        throw new Error(`Transcription failed with status: ${response.status}`);
       }
-
+  
       const data = await response.json();
+      if (!data.text) {
+        throw new Error('No transcription returned from API');
+      }
+      console.log('Transcription received, length:', data.text.length);
       setTranscription(data.text);
     } catch (error) {
       console.error('Transcription error:', error);
-      setTranscription('Error transcribing audio. Please try again.');
+      if (error.name === 'AbortError') {
+        setTranscription('Transcription timed out. The recording may be too long. Try a shorter recording or use the "Type Instead" option.');
+      } else {
+        setTranscription(`Error transcribing audio: ${error.message}. Please try again or use the "Type Instead" option.`);
+      }
     } finally {
       setIsTranscribing(false);
     }

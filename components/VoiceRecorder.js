@@ -199,27 +199,25 @@ const VoiceRecorder = () => {
         </select>
       </div>
 
-      <div className="flex justify-center mb-6">
-        <button
-          onClick={isRecording ? stopRecording : startRecording}
-          className={`p-4 rounded-full ${
-            isRecording 
-              ? 'bg-red-500 hover:bg-red-600' 
-              : 'bg-blue-500 hover:bg-blue-600'
-          } text-white`}
-        >
-          {isRecording ? 'Stop Recording' : 'Record Spec'}
-        </button>
-      </div>
-      
-      <div className="flex justify-center mb-6">
-        <button
-          onClick={toggleTextInput}
-          className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
-        >
-          {isTextInputVisible ? 'Cancel Typing' : 'Type Instead of Record'}
-        </button>
-      </div>
+      <div className="flex justify-center space-x-4 mb-6">
+  <button
+    onClick={isRecording ? stopRecording : startRecording}
+    className={`p-4 rounded-full ${
+      isRecording 
+        ? 'bg-red-500 hover:bg-red-600' 
+        : 'bg-blue-500 hover:bg-blue-600'
+    } text-white`}
+  >
+    {isRecording ? 'Stop Recording' : 'Record Spec'}
+  </button>
+  
+  <button
+    onClick={toggleTextInput}
+    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+  >
+    {isTextInputVisible ? 'Cancel Typing' : 'Type Spec'}
+  </button>
+</div>
 
       {isTextInputVisible && (
         <div className="mb-6">

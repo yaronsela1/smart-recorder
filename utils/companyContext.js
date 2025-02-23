@@ -45,8 +45,9 @@ export const companyContext = {
 
       User Alias: This is a single user. A user has access to one or more user groups, each user groups providing access to one or more systems.
 
-      Rule: Each rule is made up of a trigger, subject, condition (optional), and output. The trigger tells the rule when to start working (for example "post game" is a trigger that tell the rule to start working after the game ends).
+      Rule: Each rule is made up of a trigger, subject, condition (optional), and highlight type. The trigger tells the rule when to start working (for example "post game" is a trigger that tell the rule to start working after the game ends).
       The subject lets the user know what the rule is about (player, team, action, or game). The condition is optional and helps specify the rule to work only when something is met, for example "only send a video if the player had 30+ points).
       The action is the type of content that will be created. For example: game highlight, player highlight, top plays. Example for a rule: game - post game - game highlights. This rule has no condition
+      Context: this is a framwork that carries metadata across the rule components (trigger, condition, highlight type) and enables a safe connections between them. GameID for example is a metadata that enables game highlights to be connected with post game trigger. The trigger passes the metadata to the highlight type so that each highlight type that requires GameID can work with it.
     `
   };

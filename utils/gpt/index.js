@@ -27,7 +27,7 @@ If there is UI involved, please mention the components needed and their behaivio
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: "gpt-4",
+      model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: contextPrompt }],
       temperature: 0.7
     })
